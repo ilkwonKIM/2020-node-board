@@ -1,3 +1,16 @@
+/*
+콜백모델
+app.get('/test',(req,res,next)=>{
+	let sql = 'INSERT INTO gbook SET writer=?, comment=?';
+	let sqlValue = ['홍길동'];
+	connect.query(sql,sqlValue, (err,result) => {
+		if(err) next(mysqlErr(err));
+		else {
+			res.json(result);
+		}
+	});
+});
+ */
 
 /* 서버실행 */
 const express = require('express');
@@ -7,10 +20,11 @@ const path = require('path');
 /* 절대경로 */
 
 const publicPath = path.join(__dirname, './public');
+const jsonPath = path.join(__dirname, './json');
 const viewsPath = path.join(__dirname, './views');
 /* 마이모듈 */
 
-const {connect, mysqlErr} = require('./modules/mysql-conn');
+const {pool, mysqlErr} = require('./modules/mysql-conn');
 
 /* 라우터 */
 
@@ -32,18 +46,25 @@ app.locals.headTitle = '노드 게시판';
 /* 라우터 세팅 */
 
 app.use('/',express.static(publicPath));
-app.get('/test',(req,res,next)=>{
+app.use('/api',express.static(jsonPath));
 app.use('/board',boardRouter);
 app.use('/member', memberRouter);
-	let sql = 'INSERT INTO gbook SET writer=?, comment=?';
-	let sqlValue = ['홍길동'];
-	connect.query(sql,sqlValue, (err,result) => {
-		if(err) next(mysqlErr(err));
-		else {
-			res.json(result);
-		}
-	});
+app.get('/test',async (req,res,next)=>{
+	try {
+		let sql = 'INSERT INTO gbook SET writer=?, comment=?';
+		let	sql2 = 'SELECT * FROM gbook ORDER BY id DESC'
+		let sqlValue = ['홍길동','방문했어요'];
+		let connect = await pool.getConnection();
+		let result = await connect.execute(sql,sqlValue);
+		let result2 = await connect.execute(sql2);
+		conn.release();
+		res.json(result2);
+	}
+	catch(err) {
+		next( mysqlErr(err) )
+	}
 });
+
 
 /* 오류처리 */
 app.use((req,res,next) => {

@@ -1,9 +1,11 @@
-const mysql = require('mysql2');
-const connect = mysql.createConnection({
+const mysql = require('mysql2/promise');
+const pool = mysql.createPool({
 	host: 'localhost',
 	user:'board',
 	password:'000000',
-	database:'board'
+	database:'board',
+	waitForConnections: true,
+	connectionLimit: 10
 });
 const mysqlErr = (err) => {
 	const error = new Error();
@@ -11,4 +13,4 @@ const mysqlErr = (err) => {
 	return error;
 }
 
-module.exports = {connect, mysqlErr};
+module.exports = {pool, mysqlErr};
