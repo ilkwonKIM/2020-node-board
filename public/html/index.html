@@ -1,87 +1,74 @@
 <script>
 	/* 콜백 */
-	function nameView(fName,lName,cb) {
-		var fullName = lName +' '+ fName;
+	function nameView(fName, lName, cb) {
+		var fullName = lName + ' ' + fName;
 		cb(fullName);
 	}
 
-	nameView('길동','홍',function(name){
+	nameView('길동', '홍', function(name) {
 		console.log(name);
 	});
 
-	/* promise */
-
-
-	function nameViewPromise(fName,lName) {
-		return new Promise(function(resolve,refect){
+	/* Promise */
+	function nameViewPromise(fName, lName) {
+		return new Promise(function(resolve, reject) {
 			if(fName && lName) {
-				const fullName = lName +' '+ fName;
-				resolve(fullName)
+				const fullName = lName + ' ' + fName;
+				resolve(fullName);
 			}
 			else {
-				reject(new Error());
+				reject('err');
 			}
 		});
 	}
 
-	nameViewPromise('길동','홍')
-	.then(function(result){
+	nameViewPromise('길동', '홍')
+	.then(function(result) {
 		console.log(result);
 	})
-	.catch(function(err){
+	.catch(function(err) {
 		console.log(err);
-	})
+	});
 
 	async function userMake() {
-		var result = await nameViewPromise('길순','홍');
-		console.log(result)
+		var result = await nameViewPromise('길순', '홍');
+		console.log(result);
 	}
-	userMake()
+	userMake();
+
 
 /* book.json 통신 */
-
 function getBooks(url, cb) {
 	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function(res) {
+	xhr.onreadystatechange = function() {
 		if(xhr.status == 200 && xhr.readyState == 4) {
 			cb(JSON.parse(xhr.responseText));
 		}
 	}
-	xhr.open("GET",url);
+	xhr.open("GET", url);
 	xhr.send();
 }
 
-getBooks('/api/book.json',function(r){
-	console.log(r)
-});
+//getBooks('/api/book.json', function(r) {	console.log(r); });
 
-function getBooks(url, cb) {
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function(res) {
-		if(xhr.status == 200 && xhr.readyState == 4) {
-			cb(JSON.parse(xhr.responseText));
-		}
-	}
-	xhr.open("GET",url);
-	xhr.send();
-}
 
 function getBooks2(url) {
 	return new Promise(function(resolve, reject) {
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function () {
-		if (xhr.status = 200 && xhr.readyState == 4 ) {
-			var result = JSON.parse(xhr.responseText);
-			resolve(result);
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function(){
+			if(xhr.status == 200 && xhr.readyState == 4) {
+				var result = JSON.parse(xhr.responseText);
+				resolve(result);
+			}
 		}
-	}
-	xhr.open("GET",url);
-	chr.send();
+		xhr.open("GET", url);
+		xhr.send();
 	});
 }
 
-var result = getBooks2('/api/book.json')
-.then(function(r){console.log(r)})
-.catch(function(r) {console.log(r)})
-.finally(function(r) {console.log("통신성공")})
+getBooks2('/api/book.json')
+.then(function(r){ console.log(r); })
+.catch(function(r){ console.log(r); })
+.finally(function(){ console.log("통신성공"); })
+
 </script>
