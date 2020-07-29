@@ -21,3 +21,5 @@ app.use("/uploads", express.static(path.join(__dirname, './storage')));
 app.post('/save', upload.single('upfile'), (req, res, next) => {
 	res.send("저장");
 });
+
+// nodemon upload로 실행 
