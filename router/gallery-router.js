@@ -5,8 +5,8 @@ router.get(['/','/list','/list/:page'],(req,res,next) => {
 	res.send("리스트");
 });
 
-router.post(['/wr','/wr/:id',],(req,res,next) => {
-	res.send("글작성");
+router.get(['/wr','/wr/:id',],(req,res,next) => {
+	res.render('gallery/gallery-wr.pug');
 });
 
 router.get('/view/:id',(req,res,next) => {
