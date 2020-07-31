@@ -5,7 +5,7 @@ const path = require('path');
 require('dotenv').config();
 
 /*************** 내부모듈 *****************/
-const navi = require('./modules/navi-conn')
+const navi = require('./modules/navi-conn');
 
 /*************** 절대경로 *****************/
 const publicPath = path.join(__dirname, './public'); // 'c:\...\public'
@@ -52,6 +52,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
+	console.log(error);
 	const code = error.code || 500;
 	const msg = error.msg || '서버 내부 오류 입니다. 관리자에게 문의하세요.';
 	res.render('error.pug', { code, msg });
