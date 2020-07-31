@@ -1,3 +1,6 @@
+var grid = GridStack.init();
+
+
 function onGallerySubmit (f) {
 	var title = f.title.value.trim() 
 	var writer = f.writer.value.trim() 
