@@ -1,5 +1,4 @@
 /****************** 갤러리 작성/수정 *******************/
-.wr-wrap {}
 .wr-wrap > .wr {display: flex; border-bottom: 1px solid #ccc;}
 .wr-wrap .wr-title {flex: 20% 0 0; padding: 1rem;}
 .wr-wrap .wr-cont {flex: 80% 0 0; padding: 1rem;}
@@ -9,3 +8,39 @@
 .wr-wrap .wr-title.def::after {display: inline-block; content: "*"; color: red; font-weight: bold; margin-left: 1rem;}
 
 /* .grid-stack-item{width: 20%;} */
+.pagenation {margin: 2rem 0 ;}
+.page-item.active .page-link {color: #fff!important; background-color: #444; border-color: #222;}
+
+.loader {position: fixed; left: calc(50% - 16px); top: calc(50% - 16px);}
+
+.list-wrapper .list-sizer,
+.list-wrapper .list,
+.list-wrapper .lis--width2 {width: 19%; margin: 0.5%; border: 1px solid #ccc; border-radius: 6px; padding: 0.75rem;}
+.list-wrapper .list-sizer {border: none; padding: 0;}
+.list-wrapper .list.list--width2 {width: 39%;}
+
+.list-wrapper {visibility: hidden;}
+.list-wrapper .list {overflow: hidden;}
+.list-wrapper .list:hover .abs-img{left: 0.75rem;}
+.list-wrapper .list:hover .def-img{transform: translateX(-120%)}
+.list-wrapper .list:hover .bottom-box{bottom: 0;}
+.list-wrapper .list .def-img {transition: transform 0.5s;}
+.list-wrapper .list .abs-img {position: absolute; width: calc(100% - 1.5rem); top: 0.75rem; left: 100%; transition: left 0.5s;}
+.list-wrapper .list .bottom-box {padding: 1rem; background-color: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; width: 100%; position: absolute; bottom: -50px; color: #f8f8f8; left: 0; transition: 0.35s; transition-delay: 0.5s;}
+.list-wrapper .list .bottom-box i {margin: 0 0.5rem; cursor: pointer;}
+
+@media screen and (max-width:991px) {
+	.list-wrapper .list-sizer,
+	.list-wrapper .list {width: 24%;}
+	.list-wrapper .lis--width2 {width: 49%;}
+}
+@media screen and (max-width:767px) {
+	.list-wrapper .list-sizer,
+	.list-wrapper .list{width: 32.3333%;}
+	.list-wrapper .lis--width2 {width: 65.6666%;}
+}
+@media screen and (max-width:575px) {
+	.list-wrapper .list-sizer,
+	.list-wrapper .list {width: 99%;}
+	.list-wrapper .lis--width2 {width: 99%;}
+}

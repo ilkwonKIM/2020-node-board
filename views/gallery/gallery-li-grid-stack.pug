@@ -6,15 +6,11 @@ block content
 			div.d-flex.justify-content-between
 				small MySQL, Nodejs-Express를 사용한 갤러리 입니다.
 				button.btn.btn-primary(onclick='location.href="/gallery/wr";') 작성하기
-	i.loader.fa.fa-spin.fa-spinner.fa-2x
 	.list-wrapper
-		.list-sizer
-		each v in lists
-			.list
-					img.img.def-img(src=`${v.src}`)
-					img.img.abs-img(src=`${v.src2}`)
-					.bottom-box
-						i.fa.fa-edit
-						i.fa.fa-trash-alt
-						i.fas.fa-ellipsis-h
-	include ../include/pager.pug
+		.grid-stack
+			each v in lists
+				.grid-stack-item(data-gs-width="3" data-gs-height="3")
+					div.p-2
+						img.img.border(src=`${v.src}`)
+
+

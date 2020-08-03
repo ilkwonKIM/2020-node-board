@@ -3,19 +3,32 @@ const router = express.Router();
 const pug = {headTitle: "Node/Express 갤러리", css: "gallery", js: "gallery"};
 const { pool } = require('../modules/mysql-conn');
 const { upload } = require('../modules/multer-conn');
+const pagerInit = require('../modules/pager-conn');
 
-let sql, sqlVal = [], connect, result;
+let sql, sqlVal = [], connect, result, pager;
 
 router.get(['/', '/list', '/list/:page'], async (req, res, next) => {
 	pug.title = '갤러리 리스트';	
 	try {
-		sql = 'SELECT * FROM gallery ORDER BY id DESC';
+		req.query.cnt = req.query.cnt || 15;
+		pager = await pagerInit(req, '/gallery/list', 'gallery');
+		sql = 'SELECT * FROM gallery ORDER BY id DESC LIMIT ?, ?';
+		sqlVal = [pager.stRec, pager.cnt];
 		connect = await pool.getConnection();
-		result = await connect.execute(sql);
+		result = await connect.execute(sql, sqlVal);
 		connect.release();
+		pug.pager = pager;
 		pug.lists = result[0];
 		for(let v of pug.lists) {
-			v.src = '/upload/' + v.savefile.substr(0, 6) + '/' + v.savefile;
+			v.src = '//via.placeholder.com/300';
+			v.src2 = v.src;
+			if(v.savefile) {
+				v.src = '/upload/' + v.savefile.substr(0, 6) + '/' + v.savefile;
+				v.src2 = v.src;
+			}
+			if(v.savefile2) {
+				v.src2 = '/upload/' + v.savefile.substr(0, 6) + '/' + v.savefile2;
+			}
 		}
 		res.render('gallery/gallery-li.pug', pug);
 	}

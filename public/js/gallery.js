@@ -1,6 +1,18 @@
-var grid = GridStack.init({
-	animate: true,
+var $grid = $('.list-wrapper').imagesLoaded( function() {
+	$(".loader").hide();
+	$grid.css("visibility","visible")
+  $grid.masonry({
+		itemSelector: '.list',
+		columnWidth: '.list-sizer',
+		percentPosition: true
+  });
 });
+//masonry 적용 사이트에서 붙여넣기
+
+
+/* var grid = GridStack.init({
+	animate: true,
+}); */
 
 
 
