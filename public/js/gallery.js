@@ -9,7 +9,20 @@ var $grid = $('.list-wrapper').imagesLoaded( function() {
 });
 //masonry 적용 사이트에서 붙여넣기
 
-function onModal(id) {
+
+/* var grid = GridStack.init({
+	animate: true,
+}); */
+
+var id, seq;
+
+function onDownload() {
+	// /gallery/download/3?seq=2, /gallery/download/3?seq=
+	location.href = '/gallery/download/'+id+'?seq='+seq;
+}
+
+function onModal(idx) {
+	id = idx;
 	$.get('/gallery/view/'+id, function(r){
 		var src, src2;
 		if(r.savefile) {
@@ -33,15 +46,20 @@ $(".modal-wrapper .bt-close").click(function(){
 $(".modal-wrapper .bt-def").click(function(){
 	$(".modal-wrapper").find(".def-img").stop().animate({"opacity":1},500)
 	$(".modal-wrapper").find(".hover-img").stop().animate({"opacity":0},500)
-});
+	$(".modal-wrapper").find(".modal-pager > i").removeClass("active");
+	$(this).addClass("active");
+	seq = "";
+}).trigger("click");
 
 $(".modal-wrapper .bt-hover").click(function(){
 	$(".modal-wrapper").find(".def-img").stop().animate({"opacity":0},500)
 	$(".modal-wrapper").find(".hover-img").stop().animate({"opacity":1},500)
+	$(".modal-wrapper").find(".modal-pager > i").removeClass("active");
+	$(this).addClass("active");
+	seq = "2";
 });
-/* var grid = GridStack.init({
-	animate: true,
-}); */
+
+
 
 
 
