@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path')
+const path = require('path');
 const pug = {headTitle: "Node/Express 갤러리", css: "gallery", js: "gallery"};
 const { pool } = require('../modules/mysql-conn');
 const { upload } = require('../modules/multer-conn');
@@ -28,7 +28,7 @@ router.get(['/', '/list', '/list/:page'], async (req, res, next) => {
 				v.src2 = v.src;
 			}
 			if(v.savefile2) {
-				v.src2 = '/upload/' + v.savefile.substr(0, 6) + '/' + v.savefile2;
+				v.src2 = '/upload/' + v.savefile2.substr(0, 6) + '/' + v.savefile2;
 			}
 		}
 		res.render('gallery/gallery-li.pug', pug);
@@ -39,8 +39,20 @@ router.get(['/', '/list', '/list/:page'], async (req, res, next) => {
 	}
 });
 
-router.get(['/wr', '/wr/:id'], (req, res, next) => {
-	pug.title = '갤러리 등록';
+router.get(['/wr', '/wr/:id'], async (req, res, next) => {
+	let id = req.params.id;
+	if(!id) {
+		pug.title = '갤러리 등록';
+		pug.list = null;
+	}
+	else {
+		pug.title = '갤러리 수정';
+		sql = 'SELECT * FROM gallery WHERE id='+id;
+		connect = await pool.getConnection();
+		result = await connect.execute(sql);
+		connect.release();
+		pug.list = result[0][0];
+	}
 	res.render('gallery/gallery-wr.pug', pug);
 });
 
@@ -62,7 +74,7 @@ router.get('/rev/:id', (req, res, next) => {
 	res.send("글삭제");
 });
 
-router.get('/download/:id', async(req, res, next) => {
+router.get('/download/:id', async (req, res, next) => {
 	let id = req.params.id;
 	let seq = req.query.seq;
 	let sql, connect, result, savefile, realfile;
@@ -71,18 +83,19 @@ router.get('/download/:id', async(req, res, next) => {
 		connect = await pool.getConnection();
 		result = await connect.execute(sql);
 		connect.release();
-		savefile = result[0][0][`savefile${seq}`] //result[0][0]['savefile2']== result[0][0].savefile2
-		realfile = result[0][0][`savefile${seq}`]
-		savefile = path.join(__dirname,'../storage',savefile.substr(0,6),savefile);
-		// c:/users/hi/문서/김일권/20node-board/storage/200731/200731-saf-dfa...jpg
-		res.download(savefile,realfile);
+		savefile = result[0][0][`savefile${seq}`]; // result[0][0]['savefile2'] == result[0][0].savefile2
+		realfile = result[0][0][`realfile${seq}`];
+		savefile = path.join(__dirname, '../storage', savefile.substr(0, 6), savefile);
+		// C:\Users\hi\Documents\임덕규\20.node-board\storage\200731\200731-sdfj-sdjf...jpg
+		res.download(savefile, realfile);
 	}
-	catch {
+	catch(e) {
 		next(e);
 	}
 });
 
 router.post('/save', upload.array('upfile'), async (req, res, next) => {
+	let id = req.body.id;
 	if(req.banExt) {
 		res.send(`<script>alert('${req.banExt} 타입은 업로드 할 수 없습니다.')</script>`);
 	}
@@ -91,13 +104,15 @@ router.post('/save', upload.array('upfile'), async (req, res, next) => {
 			sqlVal[0] = req.body.title;
 			sqlVal[1] = req.body.writer;
 			sqlVal[2] = req.body.content;
-			sql = 'INSERT INTO gallery SET title=?, writer=?, content=?';
+			if(id) sql = 'UPDATE gallery SET title=?, writer=?, content=?';
+			else sql = 'INSERT INTO gallery SET title=?, writer=?, content=?';
 			for(let i in req.files) {
 				if(i == 0) sql += ', realfile=?, savefile=?';
 				else sql += ', realfile'+(Number(i)+1)+'=?, savefile'+(Number(i)+1)+'=?';
 				sqlVal.push(req.files[i].originalname);
 				sqlVal.push(req.files[i].filename);
 			}
+			if(id) sql += '';
 			const connect = await pool.getConnection();
 			const result = await connect.execute(sql, sqlVal);
 			connect.release();

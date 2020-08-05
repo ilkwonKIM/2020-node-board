@@ -31,3 +31,5 @@ SELECT * FROM 테이블명 (WHERE writer='홍길동' ORDER BY id DESC) stRec, cn
 - **grpEd** 
 	1. grpEd = grpSt + grp - 1; //예외처리 (4,5,6 세트에서 lastPage가 5면 6은 안나와야 함 )
 	2. grpEd = (grpEd > lastPage) ? lastPage: grpEd;
+
+	pug안에서는 "말고 '표를 써야 특수 문자로 인식을 안한다. 예) 					i.fa.fa-edit(onclick=`onChg("${v.id}");`)	X
