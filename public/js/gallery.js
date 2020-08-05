@@ -1,28 +1,22 @@
 var $grid = $('.list-wrapper').imagesLoaded( function() {
 	$(".loader").hide();
-	$grid.css("visibility","visible")
-  $grid.masonry({
+	$grid.css("visibility", "visible");
+	$grid.masonry({
 		itemSelector: '.list',
 		columnWidth: '.list-sizer',
 		percentPosition: true
-  });
+	});
 });
-//masonry 적용 사이트에서 붙여넣기
-
-
-/* var grid = GridStack.init({
-	animate: true,
-}); */
 
 var id, seq;
 
 function onDetail() {
-	$(".modal-wing").css({"opacity": 1, "transform":"translateX(0)"})
+	$(".modal-wing").css({"opacity": 1, "transform": "translateX(0)"});
 }
 
 $(".bt-hide").click(function(){
-	$(".modal-wing").css({"opacity": 0, "transform":"translateX(-500px)"})
-})
+	$(".modal-wing").css({"opacity": 0, "transform": "translateX(-500px)"});
+});
 
 function onDownload() {
 	// /gallery/download/3?seq=2, /gallery/download/3?seq=
@@ -55,28 +49,55 @@ $(".modal-wrapper .bt-close").click(function(){
 });
 
 $(".modal-wrapper .bt-def").click(function(){
-	$(".modal-wrapper").find(".def-img").stop().animate({"opacity":1},500)
-	$(".modal-wrapper").find(".hover-img").stop().animate({"opacity":0},500)
+	$(".modal-wrapper").find(".def-img").stop().animate({"opacity": 1}, 500);
+	$(".modal-wrapper").find(".hover-img").stop().animate({"opacity": 0}, 500);
 	$(".modal-wrapper").find(".modal-pager > i").removeClass("active");
 	$(this).addClass("active");
 	seq = "";
 }).trigger("click");
 
 $(".modal-wrapper .bt-hover").click(function(){
-	$(".modal-wrapper").find(".def-img").stop().animate({"opacity":0},500)
-	$(".modal-wrapper").find(".hover-img").stop().animate({"opacity":1},500)
+	$(".modal-wrapper").find(".def-img").stop().animate({"opacity": 0}, 500);
+	$(".modal-wrapper").find(".hover-img").stop().animate({"opacity": 1}, 500);
 	$(".modal-wrapper").find(".modal-pager > i").removeClass("active");
 	$(this).addClass("active");
 	seq = "2";
 });
 
 function onChg(id) {
-	location.href = '/gallery/wr/'+id
+	location.href = '/gallery/wr/'+id;
 }
 
 function onRev(id) {
 
 }
+
+function onImgRev(id, n, file) {
+	if(confirm("이미지를 삭제하시겠습니까?")) {
+		$.get('/gallery/api-img/'+id, {n: n, file: file}, function(r) {
+			if(r.code == 200) {
+				if(n == '') $(".wr-wrap .img1").remove();
+				else $(".wr-wrap .img2").remove();
+			}
+			else {
+				console.log(r.error);
+			}
+		});
+	}
+}
+
+/*
+$(".wr-wrap .fa-question").mouseenter(function(){
+	$(this).find("span").css("opacity", 1);
+});
+$(".wr-wrap .fa-question").mouseleave(function(){
+	$(this).find("span").css("opacity", 0);
+});
+*/
+
+/* var grid = GridStack.init({
+	animate: true,
+}); */
 
 
 
