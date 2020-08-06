@@ -68,8 +68,8 @@ function onChg(id) {
 	location.href = '/gallery/wr/'+id;
 }
 
-function onRev(id, savefile,savefile2) {
-	if(confirm("삭제하시겠습니까?")) {
+function onRev(id, savefile, savefile2) {
+	if(confirm("정말로 삭제하시겠습니까?")) {
 		location.href = '/gallery/rev/'+id+'?savefile='+savefile+'&savefile2='+savefile2;
 	}
 }
