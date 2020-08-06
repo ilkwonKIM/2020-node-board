@@ -77,8 +77,34 @@ router.get('/view/:id', async (req, res, next) => {
 	}
 });
 
-router.get('/rev/:id', (req, res, next) => {
-	res.send("글삭제");
+router.get('/rev/:id', async (req, res, next) => {
+	try {
+	let id = req.params.id;
+	let savefile = req.query.savefile;
+	let savefile2 = req.query.savefile2;
+	if(savefile) {
+		savefile = path.join(__dirname,'../storage',savefile.substr(0,6),savefile);
+		fs.unlink(savefile, (e) => {
+			if(e) res.json({code: 500, error: e});
+			else res.json({code: 200});
+		});
+	}
+	if(savefile2) {
+		savefile2 = path.join(__dirname,'../storage',savefile2.substr(0,6),savefile2);
+		fs.unlink(savefile2, (e) => {
+			if(e) res.json({code: 500, error: e});
+			else res.json({code: 200});
+		});
+	}
+	sql = 'DELETE FROM gallery WHERE id='+id;
+	connect = await pool.getConnection();
+	result = await connect.execute(sql);
+	connect.release();
+	res.redirect('/gallery');
+	}
+	catch(e) {
+		next(e);
+	}
 });
 
 router.get('/download/:id', async (req, res, next) => {
@@ -101,7 +127,7 @@ router.get('/download/:id', async (req, res, next) => {
 	}
 });
 
-router.post('/save', upload.array('upfile'), async (req, res, next) => {
+router.post('/save', upload.fields([{name: 'upfile'}, {name: 'upfile2'}]), async (req, res, next) => {
 	let id = req.body.id;
 	if(req.banExt) {
 		res.send(`<script>alert('${req.banExt} 타입은 업로드 할 수 없습니다.')</script>`);
@@ -113,20 +139,23 @@ router.post('/save', upload.array('upfile'), async (req, res, next) => {
 			sqlVal[2] = req.body.content;
 			if(id) sql = 'UPDATE gallery SET title=?, writer=?, content=?';
 			else sql = 'INSERT INTO gallery SET title=?, writer=?, content=?';
-			for(let i in req.files) {
-				if(i == 0) sql += ', realfile=?, savefile=?';
-				else sql += ', realfile'+(Number(i)+1)+'=?, savefile'+(Number(i)+1)+'=?';
-				sqlVal.push(req.files[i].originalname);
-				sqlVal.push(req.files[i].filename);
+			if(req.files['upfile']) {
+				sql += ', realfile=?, savefile=?';
+				sqlVal.push(req.files['upfile'][0].originalname);
+				sqlVal.push(req.files['upfile'][0].filename);
 			}
-			if(id) sql += '';
+			if(req.files['upfile2']) {
+				sql += ', realfile2=?, savefile2=?';
+				sqlVal.push(req.files['upfile2'][0].originalname);
+				sqlVal.push(req.files['upfile2'][0].filename);
+			}
+			if(id) sql += ' WHERE id='+id; //WHERE 앞에 띄어쓰기
 			const connect = await pool.getConnection();
 			const result = await connect.execute(sql, sqlVal);
 			connect.release();
 			res.redirect('/gallery');
 		}
 		catch(e) {
-			console.log(e);
 			next(e);
 		}
 	}
