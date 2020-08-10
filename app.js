@@ -3,14 +3,20 @@ const express = require('express');
 const app = express();
 const path = require('path');
 require('dotenv').config();
+const session = require('./modules/session-conn');
+
 
 /*************** 내부모듈 *****************/
 const navi = require('./modules/navi-conn');
 
 /*************** 절대경로 *****************/
 const publicPath = path.join(__dirname, './public'); // 'c:\...\public'
-const uploadPath = path.join(__dirname, './storage'); // 'c:\...\public'
+const uploadPath = path.join(__dirname, './storage');
 const viewsPath = path.join(__dirname, './views');
+
+/*************** 세션/쿠키 *****************/
+app.set('trust proxy', 1) // trust first proxy
+app.use(session);
 
 /*************** 라우터 *****************/
 const gbookRouter = require('./router/gbook-router');
@@ -54,8 +60,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-	if(error.code !=404) console.log(error);
-	console.log(error);
+	if(error.code != 404) console.log(error);
 	const code = error.code || 500;
 	const msg = error.msg || '서버 내부 오류 입니다. 관리자에게 문의하세요.';
 	res.render('error.pug', { code, msg });
