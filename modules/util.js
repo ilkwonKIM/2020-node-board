@@ -1,4 +1,4 @@
-const alert = (msg,loc) => {
+const alert = (msg, loc) => {
 	return html = `
 	<script>
 		alert('${msg}');
@@ -6,4 +6,4 @@ const alert = (msg,loc) => {
 	</script>`;
 }
 
-module.exports = {alert};
+module.exports = { alert };

@@ -82,9 +82,9 @@ function onImgRev(id, n, file) {
 					$(".wr-wrap .img1").remove();
 					$("input[name='savefile']").val('');
 				}
-				else{
-					 $(".wr-wrap .img2").remove();
-					 $("input[name='savefile2']").val('');
+				else {
+					$(".wr-wrap .img2").remove();
+					$("input[name='savefile2']").val('');
 				}
 			}
 			else {

@@ -1,5 +1,5 @@
-module.exports =  [
-  { name: '방명록.MySQL', link: '/gbook' },
+module.exports = [
+	{ name: '방명록.MySQL', link: '/gbook' },
 	{ name: '방명록.API', link: '/html/gbook.html' },
 	{ name: '갤러리.MySQL', link: '/gallery' },
 	{ name: 'Sequelize', link: '/sequelize' },
