@@ -1,6 +1,14 @@
 init(1);
 function init(page) {
 	function onResponse(r) {
+		if(r.user && r.user.userid) {
+			$(".navi.logout").hide();
+			$(".navi.login").show();
+		}
+		else {
+			$(".navi.logout").show();
+			$(".navi.login").hide();
+		}
 		var $lists = $("tbody.lists"), html = '';
 		if(r.code == 200) {
 			pagerInit(r.pager);
