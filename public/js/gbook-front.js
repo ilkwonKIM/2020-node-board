@@ -4,6 +4,7 @@ function init(page) {
 		if(r.user && r.user.userid) {
 			$(".navi.logout").hide();
 			$(".navi.login").show();
+			$("input[name='writer']").val(r.user.username);
 		}
 		else {
 			$(".navi.logout").show();
