@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { alert, getIP } = require('../modules/util');
 const { isAdmin, isGuest, isUser } = require('../modules/auth');
+const { Passport } = require('passport');
 require('dotenv').config();
 
 const pug = { headTitle: "Node/Express 회원관리", css: "member", js: "member" };
@@ -76,6 +77,16 @@ router.post('/sign', isGuest, async (req, res, next) => {
 router.get('/logout', isUser, (req, res, next) => {
 	req.logOut();
 	res.send(alert('로그아웃 되었습니다.', '/'));
+});
+
+router.get('/kakao',	passport.authenticate('kakao'))
+
+router.get('/kakao/cb', passport.authenticate('kakao', {failureRedirect: '/'}), (req, res, next) => {
+	console.log(req.user);
+	req.login(req.user, (err) => {
+		if(err) next(err);
+		else res.redirect('/');
+	});
 });
 
 module.exports = router;
