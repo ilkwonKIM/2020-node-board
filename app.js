@@ -2,9 +2,11 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const passport = require('passport');
 require('dotenv').config();
 const session = require('./modules/session-conn');
-
+const logger = require('./modules/morgan-conn')
+const passportModule = require('./passport')
 
 /*************** 내부모듈 *****************/
 const navi = require('./modules/navi-conn');
@@ -45,6 +47,13 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
+/***** logger(morgan) Init ******/
+passportModule(passport);
+app.use(passport.initialize())
+app.use(passport.session())
+
+/***** logger(morgan) Init ******/
+app.use(logger);
 
 /*************** 라우터 세팅 *****************/
 app.use('/', express.static(publicPath));
