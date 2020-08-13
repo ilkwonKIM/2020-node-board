@@ -1,8 +1,8 @@
-const { alert } = require('../modules/util');
-const { queryExecute } = require('../modules/mysql-conn');
+const { alert } = require('./util');
+const { queryExecute } = require('./mysql-conn');
 
 const isAdmin = (req, res, next) => {
-	if(req.isAutenticate()) next();
+	if(req.session.user && req.session.user.grade == 9) next();
 	else res.send(alert('정상적인 접근이 아닙니다.', '/'));
 }
 
