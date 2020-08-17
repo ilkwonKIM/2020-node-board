@@ -70,7 +70,7 @@ router.post('/sign', isGuest, async (req, res, next) => {
 				else return res.send(alert('로그인 되었습니다.','/'));
 			})
 		}
-	} 
+	}
 	passport.authenticate('local', done)(req,res,next);
 });
 
